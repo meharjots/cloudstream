@@ -1,0 +1,13 @@
+# Azure Functions Python worker
+azure-functions
+ 
+# Azure SDKs for keyless auth via Managed Identity
+azure-identity==1.19.0
+azure-storage-blob==12.24.0
+azure-cosmos==4.9.0
+azure-keyvault-secrets==4.9.0
+ 
+# Auth / hashing / utils
+PyJWT==2.9.0
+bcrypt==4.2.0
+ 
