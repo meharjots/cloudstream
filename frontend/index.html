@@ -1,0 +1,739 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>CloudStream — share your moments</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,700;9..144,900&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #f3ede4;
+    --bg-soft: #ece4d6;
+    --ink: #1a1a1a;
+    --ink-soft: #3a3a3a;
+    --muted: #75736e;
+    --accent: #c0492f;
+    --accent-dark: #8f361f;
+    --line: #2a2a2a;
+    --card: #ffffff;
+    --danger: #a8331d;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { min-height: 100vh; background: var(--bg); color: var(--ink); }
+  body {
+    font-family: 'Inter', system-ui, sans-serif;
+    font-size: 15px;
+    line-height: 1.55;
+  }
+
+  /* ---------- Layout ---------- */
+  nav {
+    border-bottom: 2px solid var(--line);
+    padding: 24px 40px;
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    background: var(--bg);
+  }
+  .brand {
+    font-family: 'Fraunces', serif;
+    font-weight: 900;
+    font-size: 28px;
+    letter-spacing: -0.02em;
+    color: var(--ink);
+    text-decoration: none;
+    cursor: pointer;
+  }
+  .brand em {
+    font-style: italic;
+    color: var(--accent);
+    font-weight: 400;
+  }
+  .nav-links {
+    display: flex;
+    gap: 32px;
+    align-items: center;
+    font-size: 14px;
+    font-weight: 500;
+  }
+  .nav-links a {
+    color: var(--ink-soft);
+    text-decoration: none;
+    padding: 6px 0;
+    border-bottom: 1.5px solid transparent;
+    cursor: pointer;
+    transition: border-color .2s, color .2s;
+  }
+  .nav-links a:hover { color: var(--ink); border-color: var(--accent); }
+  .nav-links a.active { color: var(--accent); border-color: var(--accent); }
+
+  main {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 48px 40px 80px;
+  }
+
+  /* ---------- Typography ---------- */
+  h1 {
+    font-family: 'Fraunces', serif;
+    font-weight: 400;
+    font-size: clamp(36px, 6vw, 64px);
+    line-height: 1.05;
+    letter-spacing: -0.025em;
+    color: var(--ink);
+    margin-bottom: 8px;
+  }
+  h1 em { font-style: italic; color: var(--accent); font-weight: 500; }
+  h2 {
+    font-family: 'Fraunces', serif;
+    font-weight: 500;
+    font-size: 28px;
+    letter-spacing: -0.015em;
+    margin-bottom: 16px;
+  }
+  .eyebrow {
+    font-family: 'Inter', sans-serif;
+    font-size: 12px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 12px;
+  }
+  .lede {
+    font-family: 'Fraunces', serif;
+    font-size: 19px;
+    line-height: 1.5;
+    color: var(--ink-soft);
+    max-width: 640px;
+    margin-bottom: 40px;
+  }
+
+  /* ---------- Buttons ---------- */
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 22px;
+    border-radius: 999px;
+    border: 1.5px solid var(--line);
+    background: var(--ink);
+    color: var(--bg);
+    font-family: 'Inter', sans-serif;
+    font-weight: 500;
+    font-size: 14px;
+    cursor: pointer;
+    text-decoration: none;
+    transition: transform .1s, background .2s;
+  }
+  .btn:hover { transform: translateY(-1px); background: var(--accent); border-color: var(--accent); }
+  .btn:active { transform: translateY(0); }
+  .btn-ghost {
+    background: transparent;
+    color: var(--ink);
+  }
+  .btn-ghost:hover { background: var(--ink); color: var(--bg); }
+  .btn-danger {
+    background: transparent;
+    border-color: var(--danger);
+    color: var(--danger);
+  }
+  .btn-danger:hover { background: var(--danger); color: var(--bg); border-color: var(--danger); }
+  .btn:disabled { opacity: 0.5; cursor: wait; }
+
+  /* ---------- Forms ---------- */
+  form.card {
+    max-width: 480px;
+    background: var(--card);
+    border: 1.5px solid var(--line);
+    border-radius: 4px;
+    padding: 40px;
+    margin: 20px 0;
+  }
+  .field { margin-bottom: 20px; }
+  .field label {
+    display: block;
+    font-size: 12px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 8px;
+    font-weight: 500;
+  }
+  .field input, .field textarea, .field select {
+    width: 100%;
+    padding: 12px 14px;
+    border: 1.5px solid var(--line);
+    border-radius: 2px;
+    background: var(--bg);
+    font-family: 'Inter', sans-serif;
+    font-size: 15px;
+    color: var(--ink);
+    transition: border-color .15s;
+  }
+  .field input:focus, .field textarea:focus, .field select:focus {
+    outline: none;
+    border-color: var(--accent);
+  }
+  .field textarea { min-height: 90px; resize: vertical; }
+  .form-switch {
+    margin-top: 20px;
+    color: var(--muted);
+    font-size: 14px;
+  }
+  .form-switch a { color: var(--accent); text-decoration: underline; cursor: pointer; }
+
+  /* ---------- Gallery ---------- */
+  .gallery {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 28px;
+    margin-top: 24px;
+  }
+  .card-media {
+    background: var(--card);
+    border: 1.5px solid var(--line);
+    border-radius: 2px;
+    overflow: hidden;
+    cursor: pointer;
+    transition: transform .15s, box-shadow .15s;
+  }
+  .card-media:hover {
+    transform: translateY(-3px);
+    box-shadow: 6px 6px 0 var(--line);
+  }
+  .card-media .thumb {
+    width: 100%;
+    aspect-ratio: 4 / 3;
+    background: var(--bg-soft);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+  }
+  .card-media .thumb img, .card-media .thumb video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  .card-media .meta {
+    padding: 16px 18px 18px;
+    border-top: 1.5px solid var(--line);
+  }
+  .card-media .title {
+    font-family: 'Fraunces', serif;
+    font-weight: 500;
+    font-size: 18px;
+    line-height: 1.2;
+    margin-bottom: 4px;
+  }
+  .card-media .sub {
+    font-size: 12px;
+    color: var(--muted);
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+  }
+
+  /* ---------- Empty states ---------- */
+  .empty {
+    text-align: center;
+    padding: 80px 20px;
+    color: var(--muted);
+    border: 2px dashed var(--line);
+    border-radius: 4px;
+  }
+  .empty p { margin-bottom: 20px; font-family: 'Fraunces', serif; font-size: 18px; }
+
+  /* ---------- Detail view ---------- */
+  .detail {
+    display: grid;
+    grid-template-columns: 1.3fr 1fr;
+    gap: 48px;
+    align-items: start;
+  }
+  .detail .preview {
+    background: var(--card);
+    border: 1.5px solid var(--line);
+    padding: 18px;
+    border-radius: 2px;
+  }
+  .detail .preview img, .detail .preview video {
+    width: 100%;
+    display: block;
+    max-height: 70vh;
+    object-fit: contain;
+  }
+  .detail .info {
+    padding-top: 8px;
+  }
+  .detail .info .title {
+    font-family: 'Fraunces', serif;
+    font-size: 40px;
+    line-height: 1.05;
+    font-weight: 400;
+    letter-spacing: -0.02em;
+    margin-bottom: 20px;
+  }
+  .detail .info .desc {
+    font-family: 'Fraunces', serif;
+    font-size: 17px;
+    line-height: 1.5;
+    color: var(--ink-soft);
+    margin-bottom: 28px;
+  }
+  .detail .info .meta-row {
+    display: flex;
+    gap: 32px;
+    padding: 20px 0;
+    border-top: 1.5px solid var(--line);
+    border-bottom: 1.5px solid var(--line);
+    margin-bottom: 24px;
+    font-size: 13px;
+  }
+  .detail .info .meta-row div { color: var(--muted); }
+  .detail .info .meta-row strong {
+    display: block;
+    color: var(--ink);
+    font-weight: 500;
+    margin-top: 2px;
+    font-size: 14px;
+  }
+  .detail .info .actions {
+    display: flex;
+    gap: 12px;
+  }
+
+  /* ---------- Toasts ---------- */
+  #toasts {
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    z-index: 100;
+  }
+  .toast {
+    background: var(--ink);
+    color: var(--bg);
+    padding: 14px 20px;
+    border-radius: 2px;
+    box-shadow: 4px 4px 0 var(--line);
+    font-size: 14px;
+    max-width: 320px;
+    animation: slideIn .2s ease;
+  }
+  .toast.error { background: var(--danger); }
+  @keyframes slideIn { from { transform: translateX(20px); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+
+  /* ---------- Hero ---------- */
+  .hero { margin-bottom: 48px; }
+  .hero .cta-row { display: flex; gap: 16px; margin-top: 24px; }
+
+  /* ---------- Responsive ---------- */
+  @media (max-width: 760px) {
+    nav { padding: 16px 20px; flex-wrap: wrap; gap: 16px; }
+    .nav-links { gap: 20px; }
+    main { padding: 32px 20px 60px; }
+    .detail { grid-template-columns: 1fr; gap: 32px; }
+    form.card { padding: 28px; }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <a class="brand" onclick="go('home')">Cloud<em>Stream</em></a>
+  <div class="nav-links" id="nav-links"></div>
+</nav>
+
+<main id="view"></main>
+
+<div id="toasts"></div>
+
+<script>
+// ============================================================================
+// Config
+// ============================================================================
+const API_BASE = "https://cloudstream-api-ms963621.azurewebsites.net";
+
+// ============================================================================
+// State
+// ============================================================================
+let route = 'home';
+let currentMediaId = null;
+let authMode = 'login'; // or 'register'
+
+function getAuth() {
+  const raw = sessionStorage.getItem('cs_auth');
+  return raw ? JSON.parse(raw) : null;
+}
+function setAuth(a) {
+  if (a) sessionStorage.setItem('cs_auth', JSON.stringify(a));
+  else sessionStorage.removeItem('cs_auth');
+  renderNav();
+}
+
+// ============================================================================
+// API client
+// ============================================================================
+async function api(path, opts = {}) {
+  const auth = getAuth();
+  const headers = { 'Content-Type': 'application/json', ...(opts.headers || {}) };
+  if (auth) headers['Authorization'] = `Bearer ${auth.token}`;
+
+  const res = await fetch(API_BASE + path, { ...opts, headers });
+  const body = await res.json().catch(() => ({}));
+  if (!res.ok) throw new Error(body.error || `HTTP ${res.status}`);
+  return body;
+}
+
+function fileToBase64(file) {
+  return new Promise((resolve, reject) => {
+    const r = new FileReader();
+    r.onload = () => resolve(r.result.split(',')[1]); // strip data URI prefix
+    r.onerror = reject;
+    r.readAsDataURL(file);
+  });
+}
+
+// ============================================================================
+// Toasts
+// ============================================================================
+function toast(msg, isError = false) {
+  const el = document.createElement('div');
+  el.className = 'toast' + (isError ? ' error' : '');
+  el.textContent = msg;
+  document.getElementById('toasts').appendChild(el);
+  setTimeout(() => el.remove(), 3500);
+}
+
+// ============================================================================
+// Router
+// ============================================================================
+function go(where, param = null) {
+  route = where;
+  currentMediaId = param;
+  render();
+  window.scrollTo(0, 0);
+}
+
+function renderNav() {
+  const auth = getAuth();
+  const nav = document.getElementById('nav-links');
+  nav.innerHTML = '';
+
+  const links = [
+    { id: 'home', label: 'Gallery' },
+  ];
+  if (auth) {
+    links.push({ id: 'upload', label: 'Upload' });
+    links.push({ id: 'my', label: 'My Media' });
+  }
+
+  for (const l of links) {
+    const a = document.createElement('a');
+    a.textContent = l.label;
+    a.className = route === l.id ? 'active' : '';
+    a.onclick = () => go(l.id);
+    nav.appendChild(a);
+  }
+
+  if (auth) {
+    const logout = document.createElement('a');
+    logout.textContent = `Log out (${auth.displayName})`;
+    logout.onclick = () => { setAuth(null); go('home'); toast('Logged out'); };
+    nav.appendChild(logout);
+  } else {
+    const login = document.createElement('a');
+    login.textContent = 'Log in';
+    login.className = route === 'auth' ? 'active' : '';
+    login.onclick = () => { authMode = 'login'; go('auth'); };
+    nav.appendChild(login);
+  }
+}
+
+function render() {
+  renderNav();
+  const v = document.getElementById('view');
+  v.innerHTML = '';
+  if (route === 'home') return renderHome(v);
+  if (route === 'upload') return renderUpload(v);
+  if (route === 'my') return renderMyMedia(v);
+  if (route === 'auth') return renderAuth(v);
+  if (route === 'detail') return renderDetail(v);
+}
+
+// ============================================================================
+// Views
+// ============================================================================
+async function renderHome(v) {
+  v.innerHTML = `
+    <section class="hero">
+      <div class="eyebrow">A cloud-native multimedia platform</div>
+      <h1>Share what <em>matters</em>.<br>Keep it in the cloud.</h1>
+      <p class="lede">CloudStream is where your photos and videos live — stored securely on Azure, shared with the world, scalable by default.</p>
+      <div class="cta-row" id="hero-cta"></div>
+    </section>
+    <div class="eyebrow">Recent uploads</div>
+    <h2>The Gallery</h2>
+    <div id="gallery-wrap">Loading…</div>
+  `;
+
+  const auth = getAuth();
+  const cta = document.getElementById('hero-cta');
+  if (auth) {
+    cta.innerHTML = `<button class="btn" onclick="go('upload')">Upload something</button>`;
+  } else {
+    cta.innerHTML = `
+      <button class="btn" onclick="authMode='register'; go('auth')">Create an account</button>
+      <button class="btn btn-ghost" onclick="authMode='login'; go('auth')">Log in</button>
+    `;
+  }
+
+  try {
+    const { items } = await api('/api/media');
+    const wrap = document.getElementById('gallery-wrap');
+    if (!items.length) {
+      wrap.innerHTML = `<div class="empty"><p>No uploads yet.</p><p style="font-family:Inter;font-size:14px">Be the first — create an account and share something.</p></div>`;
+      return;
+    }
+    wrap.innerHTML = '<div class="gallery">' + items.map(mediaCard).join('') + '</div>';
+  } catch (e) {
+    document.getElementById('gallery-wrap').innerHTML = `<div class="empty"><p>Couldn't load gallery</p><p style="font-family:Inter;font-size:14px">${e.message}</p></div>`;
+  }
+}
+
+function mediaCard(m) {
+  const isVideo = (m.mediaType === 'video') || (m.contentType && m.contentType.startsWith('video/'));
+  const thumbHtml = isVideo
+    ? `<video src="${m.fileUrl}" muted></video>`
+    : `<img src="${m.fileUrl}" alt="${escapeHtml(m.title)}" loading="lazy" />`;
+  const date = new Date(m.uploadDate).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' });
+  return `
+    <div class="card-media" onclick="go('detail', '${m.mediaId}')">
+      <div class="thumb">${thumbHtml}</div>
+      <div class="meta">
+        <div class="title">${escapeHtml(m.title)}</div>
+        <div class="sub">${date} · ${m.mediaType}</div>
+      </div>
+    </div>
+  `;
+}
+
+async function renderMyMedia(v) {
+  const auth = getAuth();
+  if (!auth) { go('auth'); return; }
+
+  v.innerHTML = `
+    <div class="eyebrow">Your uploads, ${escapeHtml(auth.displayName)}</div>
+    <h1>My <em>Media</em></h1>
+    <div id="my-wrap" style="margin-top:32px">Loading…</div>
+  `;
+  try {
+    const { items } = await api('/api/media?userId=' + auth.userId);
+    const wrap = document.getElementById('my-wrap');
+    if (!items.length) {
+      wrap.innerHTML = `<div class="empty"><p>You haven't uploaded anything.</p><button class="btn" onclick="go('upload')">Upload your first</button></div>`;
+      return;
+    }
+    wrap.innerHTML = '<div class="gallery">' + items.map(mediaCard).join('') + '</div>';
+  } catch (e) {
+    toast(e.message, true);
+  }
+}
+
+function renderUpload(v) {
+  if (!getAuth()) { go('auth'); return; }
+  v.innerHTML = `
+    <div class="eyebrow">Contribute</div>
+    <h1>Share a <em>moment</em></h1>
+    <form class="card" id="upload-form">
+      <div class="field">
+        <label>Title</label>
+        <input name="title" required maxlength="100" placeholder="e.g. Beach Sunset" />
+      </div>
+      <div class="field">
+        <label>Description (optional)</label>
+        <textarea name="description" placeholder="Say something about it…"></textarea>
+      </div>
+      <div class="field">
+        <label>Type</label>
+        <select name="mediaType">
+          <option value="image">Image</option>
+          <option value="video">Video</option>
+        </select>
+      </div>
+      <div class="field">
+        <label>File</label>
+        <input type="file" name="file" required accept="image/*,video/*" />
+      </div>
+      <button class="btn" type="submit" id="upload-btn">Upload</button>
+    </form>
+  `;
+
+  document.getElementById('upload-form').onsubmit = async (ev) => {
+    ev.preventDefault();
+    const form = ev.target;
+    const btn = document.getElementById('upload-btn');
+    btn.disabled = true;
+    btn.textContent = 'Uploading…';
+
+    try {
+      const file = form.file.files[0];
+      if (!file) throw new Error('Pick a file');
+      if (file.size > 20 * 1024 * 1024) throw new Error('File too large (20 MB max)');
+      const fileBase64 = await fileToBase64(file);
+
+      const payload = {
+        title: form.title.value.trim(),
+        description: form.description.value.trim(),
+        mediaType: form.mediaType.value,
+        fileName: file.name,
+        contentType: file.type || 'application/octet-stream',
+        fileBase64,
+      };
+      const res = await api('/api/media', { method: 'POST', body: JSON.stringify(payload) });
+      toast('Uploaded!');
+      go('detail', res.mediaId);
+    } catch (e) {
+      toast(e.message, true);
+      btn.disabled = false;
+      btn.textContent = 'Upload';
+    }
+  };
+}
+
+function renderAuth(v) {
+  const isLogin = authMode === 'login';
+  v.innerHTML = `
+    <div class="eyebrow">${isLogin ? 'Welcome back' : 'Join CloudStream'}</div>
+    <h1>${isLogin ? 'Log <em>in</em>' : 'Get <em>started</em>'}</h1>
+    <form class="card" id="auth-form">
+      ${!isLogin ? `<div class="field">
+        <label>Display name</label>
+        <input name="displayName" placeholder="Your name" />
+      </div>` : ''}
+      <div class="field">
+        <label>Email</label>
+        <input name="email" type="email" required autocomplete="email" />
+      </div>
+      <div class="field">
+        <label>Password</label>
+        <input name="password" type="password" required minlength="8" autocomplete="${isLogin ? 'current' : 'new'}-password" />
+      </div>
+      <button class="btn" type="submit" id="auth-btn">${isLogin ? 'Log in' : 'Create account'}</button>
+      <div class="form-switch">
+        ${isLogin
+          ? `Don't have an account? <a onclick="authMode='register'; render()">Register</a>`
+          : `Already have one? <a onclick="authMode='login'; render()">Log in</a>`
+        }
+      </div>
+    </form>
+  `;
+  document.getElementById('auth-form').onsubmit = async (ev) => {
+    ev.preventDefault();
+    const form = ev.target;
+    const btn = document.getElementById('auth-btn');
+    btn.disabled = true;
+    try {
+      const payload = {
+        email: form.email.value.trim(),
+        password: form.password.value,
+      };
+      if (!isLogin) payload.displayName = form.displayName.value.trim() || null;
+      const endpoint = isLogin ? '/api/auth/login' : '/api/users/register';
+      const res = await api(endpoint, { method: 'POST', body: JSON.stringify(payload) });
+      setAuth({ token: res.token, userId: res.userId, email: res.email, displayName: res.displayName });
+      toast(isLogin ? `Welcome back, ${res.displayName}` : `Welcome, ${res.displayName}`);
+      go('home');
+    } catch (e) {
+      toast(e.message, true);
+      btn.disabled = false;
+    }
+  };
+}
+
+async function renderDetail(v) {
+  v.innerHTML = `<p style="color:var(--muted)">Loading…</p>`;
+  try {
+    const m = await api(`/api/media/${currentMediaId}`);
+    const auth = getAuth();
+    const isOwner = auth && auth.userId === m.userId;
+    const isVideo = m.mediaType === 'video' || (m.contentType && m.contentType.startsWith('video/'));
+    const date = new Date(m.uploadDate).toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' });
+
+    v.innerHTML = `
+      <a onclick="go('home')" style="cursor:pointer;color:var(--muted);font-size:14px;text-decoration:underline;display:inline-block;margin-bottom:24px">← back to gallery</a>
+      <div class="detail">
+        <div class="preview">
+          ${isVideo
+            ? `<video src="${m.fileUrl}" controls></video>`
+            : `<img src="${m.fileUrl}" alt="${escapeHtml(m.title)}" />`}
+        </div>
+        <div class="info">
+          <div class="eyebrow">${m.mediaType}</div>
+          <div class="title" id="detail-title">${escapeHtml(m.title)}</div>
+          <div class="desc" id="detail-desc">${escapeHtml(m.description) || '<em style="color:var(--muted)">(no description)</em>'}</div>
+          <div class="meta-row">
+            <div>Uploaded<strong>${date}</strong></div>
+            <div>Size<strong>${Math.round(m.fileSize / 1024)} KB</strong></div>
+          </div>
+          ${isOwner ? `
+            <div class="actions">
+              <button class="btn btn-ghost" onclick="editMedia('${m.mediaId}')">Edit</button>
+              <button class="btn btn-danger" onclick="deleteMedia('${m.mediaId}')">Delete</button>
+            </div>
+          ` : ''}
+        </div>
+      </div>
+    `;
+  } catch (e) {
+    v.innerHTML = `<div class="empty"><p>Couldn't load that item</p><p style="font-family:Inter;font-size:14px">${e.message}</p></div>`;
+  }
+}
+
+async function editMedia(id) {
+  const newTitle = prompt('New title:');
+  if (newTitle === null) return;
+  const newDesc = prompt('New description:');
+  if (newDesc === null) return;
+  try {
+    await api(`/api/media/${id}`, {
+      method: 'PUT',
+      body: JSON.stringify({ title: newTitle.trim(), description: newDesc.trim() }),
+    });
+    toast('Updated');
+    go('detail', id);
+  } catch (e) {
+    toast(e.message, true);
+  }
+}
+
+async function deleteMedia(id) {
+  if (!confirm('Delete this media? This cannot be undone.')) return;
+  try {
+    await api(`/api/media/${id}`, { method: 'DELETE' });
+    toast('Deleted');
+    go('home');
+  } catch (e) {
+    toast(e.message, true);
+  }
+}
+
+// ============================================================================
+// Utils
+// ============================================================================
+function escapeHtml(s) {
+  if (!s) return '';
+  return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+}
+
+// ============================================================================
+// Boot
+// ============================================================================
+render();
+</script>
+</body>
+</html>
