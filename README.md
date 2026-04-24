@@ -3,7 +3,7 @@
 **Module:** COM682 Cloud Native Development
 **Student:** Meharjot Singh (B00963621)
 **Project:** CloudStream — scalable cloud-native multimedia sharing platform
-**Platform:** Microsoft Azure · **Region:** UK South
+**Platform:** Microsoft Azure · **Region:** Birmingham
 
 ---
 
