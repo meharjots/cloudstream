@@ -1,0 +1,83 @@
+name: Deploy CloudStream
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+env:
+  PYTHON_VERSION: '3.13'
+  AZURE_WEBAPP_NAME: cloudstream-api-ms963621
+  STORAGE_ACCOUNT: cloudstreamstms963621
+
+jobs:
+  # ---------------------------------------------------------------------------
+  # Backend — Flask to Azure App Service
+  # ---------------------------------------------------------------------------
+  deploy-backend:
+    name: Deploy Flask API
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python ${{ env.PYTHON_VERSION }}
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+
+      - name: Install Python dependencies
+        run: |
+          python -m venv .venv
+          source .venv/bin/activate
+          pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Package backend
+        run: |
+          # Zip the Flask app and its dependencies for App Service
+          zip -r release.zip . \
+            -x ".venv/*" \
+            -x ".git/*" \
+            -x "frontend/*" \
+            -x "__pycache__/*" \
+            -x "*.pyc" \
+            -x ".github/*" \
+            -x ".vscode/*" \
+            -x "host.json" \
+            -x "local.settings.json" \
+            -x "function_app.py" \
+            -x ".azure/*"
+
+      - name: Deploy to Azure App Service
+        uses: azure/webapps-deploy@v3
+        with:
+          app-name: ${{ env.AZURE_WEBAPP_NAME }}
+          publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
+          package: release.zip
+
+  # ---------------------------------------------------------------------------
+  # Frontend — static site to Blob Storage ($web container)
+  # ---------------------------------------------------------------------------
+  deploy-frontend:
+    name: Deploy Frontend
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Upload frontend to Azure Blob Storage
+        uses: azure/cli@v2
+        env:
+          AZURE_STORAGE_ACCOUNT: ${{ env.STORAGE_ACCOUNT }}
+          AZURE_STORAGE_KEY: ${{ secrets.STORAGE_ACCOUNT_KEY }}
+        with:
+          inlineScript: |
+            az storage blob upload-batch \
+              --account-name "$AZURE_STORAGE_ACCOUNT" \
+              --account-key "$AZURE_STORAGE_KEY" \
+              --source frontend \
+              --destination '$web' \
+              --overwrite
