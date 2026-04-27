@@ -1,13 +1,21 @@
 """
-CloudStream REST API
+CloudStream REST API — DEPRECATED (Azure Functions implementation)
 COM682 Coursework 2 — Meharjot Singh B00963621
 
-Python v2 model Azure Functions app exposing CRUD endpoints for a
-cloud-native multimedia sharing platform.
+⚠️  THIS FILE IS NOT IN PRODUCTION USE.
 
-Auth: JWT (HS256). Passwords stored as bcrypt hashes.
-Storage: Azure Blob (media files) + Cosmos DB (metadata), both accessed
-via DefaultAzureCredential — no connection strings in code.
+History:
+  Phase 2 of CW2: built the API as Azure Functions (Linux Consumption + Python).
+  Phase 3: discovered the Linux Consumption Function App on the Azure for
+  Students subscription couldn't start its host (HTTP 503 Site Unavailable
+  in all five allowed EU regions). After spending ~2 hours diagnosing this
+  as a platform-level limitation rather than a code issue, the API was
+  migrated to Azure App Service (Linux, Python 3.13, Flask). See app.py for
+  the current production code.
+
+This file is preserved as evidence of the original architecture and the
+pivot decision (Learning Outcome 4: identifying deficiencies and improving
+practice). It is not imported, deployed, or executed by the live system.
 """
 
 import azure.functions as func
